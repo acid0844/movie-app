@@ -1,12 +1,18 @@
 <template>
   <div class="container">
     <h1>人気の映画一覧</h1>
+    <input
+      v-model="searchQuery"
+      type="text"
+      placeholder="映画タイトルで検索"
+      class="search-input"
+    />
 
     <!-- 🔄 ローディング表示 or 映画一覧 -->
     <div v-if="loading">読み込み中...</div>
     <div v-else class="movie-list">
       <div
-        v-for="movie in movies"
+        v-for="movie in filteredMovies"
         :key="movie.id"
         class="movie-card"
         @click="showDetails(movie)"
@@ -44,8 +50,16 @@ export default {
       movies: [],
       selectedMovie: null, // ⭐ クリックされた映画情報
       loading: true,
-      favorites: []
+      favorites: [],
+      searchQuery: ''
     };
+  },
+  computed: {
+    filteredMovies() {
+      return this.movies.filter(movie =>
+        movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   },
   methods: {
     async fetchMovies() {
@@ -81,7 +95,7 @@ export default {
     },
     closeModal() {
       this.selectedMovie = null;
-    }
+    },
   },
   mounted() {
     this.fetchMovies();
@@ -102,6 +116,16 @@ export default {
 h1 {
   text-align: center;
   margin-bottom: 20px;
+}
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  margin: 10px auto 20px;
+  display: block;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 .movie-list {
   display: grid;

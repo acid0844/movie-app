@@ -2,16 +2,6 @@
   <div class="container">
     <h1>人気の映画一覧</h1>
 
-    <!-- ⭐ 映画の詳細表示エリア -->
-    <div v-if="selectedMovie" class="detail-card">
-      <button @click="selectedMovie = null">閉じる</button>
-      <img :src="getImageUrl(selectedMovie.poster_path)" />
-      <h2>{{ selectedMovie.title }}</h2>
-      <p>評価: {{ selectedMovie.vote_average }} / 10</p>
-      <p>公開日: {{ selectedMovie.release_date }}</p>
-      <p>{{ selectedMovie.overview }}</p>
-    </div>
-
     <!-- 🔄 ローディング表示 or 映画一覧 -->
     <div v-if="loading">読み込み中...</div>
     <div v-else class="movie-list">
@@ -28,6 +18,18 @@
             {{ isFavorite(movie) ? '★ お気に入り済み' : '☆ お気に入り追加' }}
           </button>
         </div>
+      </div>
+    </div>
+
+    <!-- ⭐ モーダル -->
+    <div v-if="selectedMovie" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <button class="modal-close" @click="closeModal">×</button>
+        <img :src="getImageUrl(selectedMovie.poster_path)" />
+        <h2>{{ selectedMovie.title }}</h2>
+        <p>評価: {{ selectedMovie.vote_average }} / 10</p>
+        <p>公開日: {{ selectedMovie.release_date }}</p>
+        <p>{{ selectedMovie.overview }}</p>
       </div>
     </div>
   </div>
@@ -76,6 +78,9 @@ export default {
     },
     isFavorite(movie) {
       return this.favorites.some(fav => fav.id === movie.id);
+    },
+    closeModal() {
+      this.selectedMovie = null;
     }
   },
   mounted() {
@@ -147,23 +152,44 @@ h1 {
   position: relative;
 }
 
-/* 回り込みを解除（clearfix） */
-.detail-card::after {
-  content: "";
-  display: block;
-  clear: both;
+/* モーダルエリア */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
-
-.detail-card img {
-  width: 200px;
-  float: left;
-  margin-right: 20px;
-  border-radius: 8px;
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh; /* 縦の制限を追加 */
+  overflow-y: auto;  /* 縦にスクロールできるように */
+  border-radius: 10px;
+  position: relative;
 }
-
-.detail-card button {
-  float: right;
-  padding: 6px 12px;
+.modal-content img {
+  width: 100%;
+  max-height: 300px; /* ← 画像の高さを制限 */
+  object-fit: contain; /* ← はみ出さずに縮小 */
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {

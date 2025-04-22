@@ -107,145 +107,176 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   max-width: 960px;
   margin: 0 auto;
   padding: 20px;
-}
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.search-input {
-  width: 100%;
-  max-width: 400px;
-  margin: 10px auto 20px;
-  display: block;
-  padding: 10px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-.movie-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
-}
-.movie-card {
-  border: 1px solid #ccc;
-  padding: 10px;
-  background: #fff;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-.movie-card:hover {
-  transform: scale(1.03);
-}
-.movie-card img {
-  width: 100%;
-  border-radius: 4px;
-}
-.movie-card button {
-  margin-top: 10px;
-  padding: 4px 8px;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #ffd700;
-  cursor: pointer;
-}
-.card-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-}
 
-/* ⭐ 詳細エリア */
-.detail-card {
-  background: #f9f9f9;
-  border: 2px solid #aaa;
-  padding: 20px;
-  margin-bottom: 30px;
-  border-radius: 12px;
-  position: relative;
-}
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
 
-/* モーダルエリア */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: #fff;
-  padding: 24px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 80vh; /* 縦の制限を追加 */
-  overflow-y: auto;  /* 縦にスクロールできるように */
-  border-radius: 10px;
-  position: relative;
-}
-.modal-content img {
-  width: 100%;
-  max-height: 300px; /* ← 画像の高さを制限 */
-  object-fit: contain; /* ← はみ出さずに縮小 */
-  border-radius: 6px;
-  margin-bottom: 16px;
-}
-.modal-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+  .search-input {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto 20px;
+    display: block;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
 
-@media screen and (max-width: 600px) {
   .movie-list {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+
+    @media screen and (max-width: 600px) {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
   }
 
   .movie-card {
-    font-size: 0.9rem;
-    padding: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+
+    img {
+      width: 100%;
+      border-radius: 4px;
+
+      @media screen and (max-width: 600px) {
+        height: auto;
+      }
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 4px 8px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #ffd700;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 600px) {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
   }
 
-  .movie-card img {
+  .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: auto;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .modal-content {
+      background: #fff;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border-radius: 10px;
+      position: relative;
+
+      img {
+        width: 100%;
+        max-height: 300px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 16px;
+
+        @media screen and (max-width: 600px) {
+          max-height: 200px;
+        }
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-size: 24px;
+        background: none;
+        border: none;
+        cursor: pointer;
+
+        @media screen and (max-width: 600px) {
+          top: 4px;
+          right: 8px;
+        }
+      }
+
+      @media screen and (max-width: 600px) {
+        padding: 16px;
+      }
+    }
   }
 
   .detail-card {
-    padding: 16px;
-  }
+    background: #f9f9f9;
+    border: 2px solid #aaa;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    position: relative;
 
-  .detail-card img {
-    width: 100%;
-    float: none;
-    margin: 0 0 12px 0;
-  }
+    @media screen and (max-width: 600px) {
+      padding: 16px;
+    }
 
-  .detail-card button {
-    float: none;
-    display: block;
-    margin-bottom: 10px;
+    img {
+      width: 200px;
+      float: left;
+      margin-right: 20px;
+      border-radius: 8px;
+
+      @media screen and (max-width: 600px) {
+        width: 100%;
+        float: none;
+        margin: 0 0 12px 0;
+      }
+    }
+
+    button {
+      float: right;
+      padding: 6px 12px;
+
+      @media screen and (max-width: 600px) {
+        float: none;
+        display: block;
+        margin-bottom: 10px;
+      }
+    }
   }
 }
 </style>

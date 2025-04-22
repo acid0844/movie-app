@@ -22,7 +22,12 @@
         @click="showDetails(movie)"
       >
         <img :src="getImageUrl(movie.poster_path)" />
-        <h2>{{ movie.title }}</h2>
+        <div class="card-content">
+          <h2>{{ movie.title }}</h2>
+          <button @click.stop="toggleFavorite(movie)">
+            {{ isFavorite(movie) ? '★ お気に入り済み' : '☆ お気に入り追加' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -36,7 +41,8 @@ export default {
     return {
       movies: [],
       selectedMovie: null, // ⭐ クリックされた映画情報
-      loading: true
+      loading: true,
+      favorites: []
     };
   },
   methods: {
@@ -58,10 +64,26 @@ export default {
     },
     showDetails(movie) {
       this.selectedMovie = movie;
+    },
+    toggleFavorite(movie) {
+      const exists = this.favorites.some(fav => fav.id === movie.id);
+      if (exists) {
+        this.favorites = this.favorites.filter(fav => fav.id !== movie.id);
+      } else {
+        this.favorites.push(movie);
+      }
+      localStorage.setItem("favorites", JSON.stringify(this.favorites));
+    },
+    isFavorite(movie) {
+      return this.favorites.some(fav => fav.id === movie.id);
     }
   },
   mounted() {
     this.fetchMovies();
+    const storedFavs = localStorage.getItem("favorites");
+    if (storedFavs) {
+      this.favorites = JSON.parse(storedFavs);
+    }
   }
 };
 </script>
@@ -86,6 +108,9 @@ h1 {
   padding: 10px;
   background: #fff;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
@@ -95,6 +120,21 @@ h1 {
 .movie-card img {
   width: 100%;
   border-radius: 4px;
+}
+.movie-card button {
+  margin-top: 10px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #ffd700;
+  cursor: pointer;
+}
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 /* ⭐ 詳細エリア */

@@ -165,4 +165,37 @@ h1 {
   float: right;
   padding: 6px 12px;
 }
+
+@media screen and (max-width: 600px) {
+  .movie-list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .movie-card {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  .movie-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  .detail-card {
+    padding: 16px;
+  }
+
+  .detail-card img {
+    width: 100%;
+    float: none;
+    margin: 0 0 12px 0;
+  }
+
+  .detail-card button {
+    float: none;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
 </style>

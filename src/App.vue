@@ -8,6 +8,20 @@
       class="search-input"
     />
 
+    <div class="genre-filter">
+      <button
+        v-for="genre in genres"
+        :key="genre.id"
+        @click="selectedGenre = genre.id"
+        :class="{ active: selectedGenre === genre.id }"
+      >
+        {{ genre.name }}
+      </button>
+      <button @click="selectedGenre = null" :class="{ active: selectedGenre === null }">
+        すべて
+      </button>
+    </div>
+
     <!-- 🔄 ローディング表示 or 映画一覧 -->
     <div v-if="loading">読み込み中...</div>
     <div v-else class="movie-list">
@@ -51,13 +65,21 @@ export default {
       selectedMovie: null, // ⭐ クリックされた映画情報
       loading: true,
       favorites: [],
-      searchQuery: ''
+      searchQuery: '',
+      genres: [],
+      selectedGenre: null
     };
   },
   computed: {
     filteredMovies() {
-      return this.movies.filter(movie =>
+      return this.movies
+      .filter(movie =>
         movie.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+      )
+      .filter(movie =>
+        this.selectedGenre === null
+          ? true
+          : movie.genre_ids.includes(this.selectedGenre)
       );
     }
   },
@@ -96,13 +118,25 @@ export default {
     closeModal() {
       this.selectedMovie = null;
     },
+    async fetchGenres() {
+      try {
+        const apiKey = "a1b8f3d5bac74979614e7949b1462394";
+        const res = await axios.get(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=ja`
+        );
+        this.genres = res.data.genres; // idとnameのリスト
+      } catch (error) {
+        console.error("ジャンルの取得に失敗しました", error);
+      }
+    }
   },
-  mounted() {
+  async mounted() {
     this.fetchMovies();
     const storedFavs = localStorage.getItem("favorites");
     if (storedFavs) {
       this.favorites = JSON.parse(storedFavs);
     }
+    await this.fetchGenres();
   }
 };
 </script>
@@ -127,6 +161,27 @@ export default {
     font-size: 1rem;
     border-radius: 8px;
     border: 1px solid #ccc;
+  }
+
+  .genre-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    button {
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #eee;
+      cursor: pointer;
+
+      &.active {
+        background-color: #333;
+        color: #fff;
+      }
+    }
   }
 
   .movie-list {

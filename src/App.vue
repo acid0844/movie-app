@@ -43,26 +43,24 @@
     </div>
 
     <!-- ⭐ モーダル -->
-    <div v-if="selectedMovie" class="modal-overlay" @click.self="closeModal">
-      <div class="modal-content">
-        <button class="modal-close" @click="closeModal">×</button>
-        <img :src="getImageUrl(selectedMovie.poster_path)" />
-        <h2>{{ selectedMovie.title }}</h2>
-        <p>評価: {{ selectedMovie.vote_average }} / 10</p>
-        <p>公開日: {{ selectedMovie.release_date }}</p>
-        <p>{{ selectedMovie.overview }}</p>
-      </div>
-    </div>
+    <MovieModal
+      v-if="selectedMovie"
+      :movie="selectedMovie"
+      :image-url="getImageUrl(selectedMovie.poster_path)"
+      :close-modal="closeModal"
+    />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import MovieCard from "./components/MovieCard.vue";
+import MovieModal from "./components/MovieModal.vue"
 
 export default {
   components: {
-    MovieCard
+    MovieCard,
+    MovieModal
   },
   data() {
     return {

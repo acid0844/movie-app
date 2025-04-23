@@ -31,20 +31,15 @@
     <!-- 🔄 ローディング表示 or 映画一覧 -->
     <div v-if="loading">読み込み中...</div>
     <div v-else class="movie-list">
-      <div
+      <MovieCard
         v-for="movie in filteredMovies"
         :key="movie.id"
-        class="movie-card"
-        @click="showDetails(movie)"
-      >
-        <img :src="getImageUrl(movie.poster_path)" />
-        <div class="card-content">
-          <h2>{{ movie.title }}</h2>
-          <button @click.stop="toggleFavorite(movie)">
-            {{ isFavorite(movie) ? '★ お気に入り済み' : '☆ お気に入り追加' }}
-          </button>
-        </div>
-      </div>
+        :movie="movie"
+        :image-url="getImageUrl(movie.poster_path)"
+        :is-favorite="isFavorite"
+        :toggle-favorite="toggleFavorite"
+        :on-click-card="() => showDetails(movie)"
+      />
     </div>
 
     <!-- ⭐ モーダル -->
@@ -63,8 +58,12 @@
 
 <script>
 import axios from "axios";
+import MovieCard from "./components/MovieCard.vue";
 
 export default {
+  components: {
+    MovieCard
+  },
   data() {
     return {
       movies: [],
@@ -218,46 +217,6 @@ export default {
     @media screen and (max-width: 600px) {
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 12px;
-    }
-  }
-
-  .movie-card {
-    border: 1px solid #ccc;
-    padding: 10px;
-    background: #fff;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-
-    &:hover {
-      transform: scale(1.03);
-    }
-
-    img {
-      width: 100%;
-      border-radius: 4px;
-
-      @media screen and (max-width: 600px) {
-        height: auto;
-      }
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 4px 8px;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: 6px;
-      background-color: #ffd700;
-      cursor: pointer;
-    }
-
-    @media screen and (max-width: 600px) {
-      font-size: 0.9rem;
-      padding: 8px;
     }
   }
 

@@ -8,19 +8,11 @@
       class="search-input"
     />
 
-    <div class="genre-filter">
-      <button
-        v-for="genre in genres"
-        :key="genre.id"
-        @click="selectedGenre = genre.id"
-        :class="{ active: selectedGenre === genre.id }"
-      >
-        {{ genre.name }}
-      </button>
-      <button @click="selectedGenre = null" :class="{ active: selectedGenre === null }">
-        すべて
-      </button>
-    </div>
+    <GenreFilter
+      :genres="genres"
+      :selectedGenre="selectedGenre"
+      :selectGenre="(id) => selectedGenre = id"
+    />
 
     <div class="favorite-toggle">
       <button @click="showFavoritesOnly = !showFavoritesOnly">
@@ -55,12 +47,14 @@
 <script>
 import axios from "axios";
 import MovieCard from "./components/MovieCard.vue";
-import MovieModal from "./components/MovieModal.vue"
+import MovieModal from "./components/MovieModal.vue";
+import GenreFilter from "./components/GenreFilter.vue";
 
 export default {
   components: {
     MovieCard,
-    MovieModal
+    MovieModal,
+    GenreFilter
   },
   data() {
     return {

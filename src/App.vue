@@ -22,6 +22,12 @@
       </button>
     </div>
 
+    <div class="favorite-toggle">
+      <button @click="showFavoritesOnly = !showFavoritesOnly">
+        {{ showFavoritesOnly ? '★ お気に入りのみ表示中（戻す）' : '☆ お気に入りだけ表示' }}
+      </button>
+    </div>
+
     <!-- 🔄 ローディング表示 or 映画一覧 -->
     <div v-if="loading">読み込み中...</div>
     <div v-else class="movie-list">
@@ -67,7 +73,8 @@ export default {
       favorites: [],
       searchQuery: '',
       genres: [],
-      selectedGenre: null
+      selectedGenre: null,
+      showFavoritesOnly: false
     };
   },
   computed: {
@@ -80,6 +87,11 @@ export default {
         this.selectedGenre === null
           ? true
           : movie.genre_ids.includes(this.selectedGenre)
+      )
+      .filter(movie =>
+        this.showFavoritesOnly
+          ? this.favorites.some(fav => fav.id === movie.id)
+          : true
       );
     }
   },
@@ -181,6 +193,20 @@ export default {
         background-color: #333;
         color: #fff;
       }
+    }
+  }
+
+  .favorite-toggle {
+    text-align: center;
+    margin-bottom: 20px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      background: #ffeaa7;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      font-weight: bold;
     }
   }
 
